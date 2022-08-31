@@ -20,14 +20,10 @@ function waitForElm(selector) {
 }
 
 async function check() {
-    console.log("waiting for element to load")
-    setTimeout(() => {
-        console.log("finding and selecting oaiuth button")
-        document.querySelectorAll('[data-identifier="asingh25@students.polytechnic.org"]')[0].click()
-
-
-    }, 1000)
-
+    const userField = await waitForElm("#Username")
+    userField.value = "emailGoesHere"
+    await waitForElm("#nextBtn")
+    document.getElementById("nextBtn").click()
 }
 
 check()
