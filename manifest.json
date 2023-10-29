@@ -1,30 +1,33 @@
 {
-    "manifest_version": 3,
-    "name": "MyPolyAutoLogin",
-    "version": "1.0",
-    "icons": { 
-        "16": "poly_logo.png",
-        "48": "poly_logo.png",
-        "128": "poly_logo.png" 
+  "manifest_version": 3,
+  "name": "MyPolyAutoLogin",
+  "version": "1.0",
+  "icons": {
+    "16": "poly_logo.png",
+    "48": "poly_logo.png",
+    "128": "poly_logo.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/Content.js"],
+      "run_at": "document_start"
+      
     },
-    "content_scripts": [
-        {
-        "matches": ["<all_urls>"],
-        "js": ["src/Content.js"]
-        },
-        {
-            "matches": ["<all_urls>"],
-            "js": ["src/signInWithGoogle.js"]
-        },
-        {
-            "matches": ["<all_urls>"],
-            "js": ["src/clickEmail.js"]
-        }
-    ],
-    "action": {
-        "default_popup": "Popup.html"
-      },
-    "permissions": [
-        "activeTab"
-    ]
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/signInWithGoogle.js"]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/clickEmail.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "Popup.html"
+  },
+  "permissions": ["activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  }
 }
