@@ -9,25 +9,14 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://polytechnic.myschoolapp.com/*","https://accounts.google.com/*", "https://*.myschoolapp.com/*", "https://*.blackbaud.com/*"],
       "js": ["src/Content.js"],
       "run_at": "document_start"
       
-    },
-    {
-      "matches": ["<all_urls>"],
-      "js": ["src/signInWithGoogle.js"]
-    },
-    {
-      "matches": ["<all_urls>"],
-      "js": ["src/clickEmail.js"]
     }
   ],
   "action": {
     "default_popup": "Popup.html"
   },
-  "permissions": ["activeTab"],
-  "background": {
-    "service_worker": "background.js"
-  }
+  "permissions": ["activeTab"]
 }
