@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "MyPolyAutoLogin",
   "version": "1.0",
+  "description": "Automatically logs you into MyPolytechnic myschool portal and skips the 3 clicks",
   "icons": {
     "16": "poly_logo.png",
     "48": "poly_logo.png",
@@ -14,9 +15,5 @@
       "run_at": "document_start"
       
     }
-  ],
-  "action": {
-    "default_popup": "Popup.html"
-  },
-  "permissions": ["activeTab"]
+  ]
 }
