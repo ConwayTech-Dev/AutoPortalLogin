@@ -27,6 +27,9 @@ async function check() {
 }
 let loadingDiv = document.createElement("div");
 loadingDiv.innerHTML = `
+<section>
+<h2 class="splashText">Welcome back!</h2>
+</section>
 <div class="lol">
 <section>
 <div></div>
@@ -44,6 +47,14 @@ loadingDiv.innerHTML = `
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+.splashText {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1rem !important;
+    text-align: center !important;
+    all: unset;
 }
 
 .lol body {
