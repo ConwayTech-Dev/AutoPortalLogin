@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
   // cueck current url, if it contains "/app/student#studentmyday/progress" we logged in
   if (
-    window.location.href.includes("https://polytechnic.myschoolapp.com/app")
+    window.location.href.includes("https://polytechnic.myschoolapp.com/app/student")
   ) {
     loadingDiv.remove();
     console.log("logged in");
