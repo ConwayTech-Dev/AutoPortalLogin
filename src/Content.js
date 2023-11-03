@@ -20,9 +20,9 @@ function waitForElm(selector) {
 }
 
 async function check() {
-//   const userField = await waitForElm("#Username");
-//   userField.value = "jhsieh25@students.polytechnic.org";
-//   await waitForElm("#nextBtn");
+  //   const userField = await waitForElm("#Username");
+  //   userField.value = "jhsieh25@students.polytechnic.org";
+  //   await waitForElm("#nextBtn");
   // document.getElementById("nextBtn").click()
 }
 let loadingDiv = document.createElement("div");
@@ -165,7 +165,7 @@ transform: translate(0, 0) ;
 }
 } 
 </style>
-`
+`;
 loadingDiv.style.all = "unset";
 loadingDiv.style.position = "fixed";
 loadingDiv.style.top = "0";
@@ -180,58 +180,52 @@ loadingDiv.style.alignItems = "center";
 loadingDiv.style.zIndex = "1000000"; // high enough to overlay the entire content
 document.addEventListener("DOMContentLoaded", async function (event) {
 
-    
-  
-
-//   check();
-//   let resp = await chrome.runtime.sendMessage({
-//     action: "showSplashScreen",
-
-//   });
-//   if (resp == "showTrue") {
-//     document.body.appendChild(loadingDiv);
-//   console.log("loading div added");
-//   }
-// document.body.appendChild(loadingDiv)/
-
-  console.log("url includes oauthchooseaccount: " + window.location.href.includes("https://accounts.google.com/o/oauth2/auth"))
-  console.log("url includes bbid.blackbaud.com: " + window.location.href.includes("bbid.blackbaud.com"))
-  if (window.location.href.includes("https://polytechnic.myschoolapp.com/app#login")){
-    document.body.appendChild(loadingDiv)
-    window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login"
-  }
-  else if (window.location.href.includes("app.blackbaud.com/signin")    ) 
-    {
-        document.body.append(loadingDiv)
-        await waitForElm(".spa-auth-button-full")
-        document.getElementsByClassName("spa-auth-button-full")[0].click();
+  window.onhashchange = function () {
+    if (window.location.href.includes("app#login")) {
+      document.body.appendChild(loadingDiv);
+      window.location.href =
+        "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
     }
-  else if (window.location.href.includes("https://accounts.google.com/o/oauth2/auth") && window.location.href.includes("bbid.blackbaud.com")) {
-    document.body.append(loadingDiv)
-    console.log("waiting for element to load")
+  };
+  if (window.location.href.includes("app#login")) {
+    document.body.appendChild(loadingDiv);
+    window.location.href =
+      "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
+  } else if (window.location.href.includes("app.blackbaud.com/signin")) {
+    document.body.append(loadingDiv);
+    await waitForElm(".spa-auth-button-full");
+    document.getElementsByClassName("spa-auth-button-full")[0].click();
+  } else if (
+    window.location.href.includes(
+      "https://accounts.google.com/o/oauth2/auth"
+    ) &&
+    window.location.href.includes("bbid.blackbaud.com")
+  ) {
+    document.body.append(loadingDiv);
+    console.log("waiting for element to load");
     setTimeout(() => {
-        console.log("finding and selecting oaiuth button")
-        document.querySelectorAll('[data-authuser="1"]')[0].click()
+
+      // find all elements with [authuser] field and loop over them checking text content
+      let authUsers = document.querySelectorAll('[data-authuser]');
+      console.log(authUsers);
+      for (let i = 0; i < authUsers.length; i++) {
+        if (authUsers[i].innerText.includes("students.polytechnic.org")) {
+          authUsers[i].click();
+          break;
+        }
+      }
 
 
-    }, 450)
+    }, 450);
   }
 
   // cueck current url, if it contains "/app/student#studentmyday/progress" we logged in
-if (window.location.href.includes("https://polytechnic.myschoolapp.com/app")) {
-    // remove loading div
+  if (
+    window.location.href.includes("https://polytechnic.myschoolapp.com/app")
+  ) {
     loadingDiv.remove();
-    console.log("logged in")
-
-}
+    console.log("logged in");
+  }
 });
 
 
-
-// check()
-
-// await a response from the background script
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//   console.log("message received")
-// });
-// check()
