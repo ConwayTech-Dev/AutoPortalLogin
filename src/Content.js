@@ -190,15 +190,26 @@ loadingDiv.style.justifyContent = "center";
 loadingDiv.style.alignItems = "center";
 loadingDiv.style.zIndex = "1000000"; // high enough to overlay the entire content
 document.addEventListener("DOMContentLoaded", async function (event) {
+console.log("logging in")
 
   window.onhashchange = function () {
-    if (window.location.href.includes("app#login")) {
+    console.log("window changed")
+    console.log(window.location.href)
+    if (window.location.href.includes("app#login") || window.location.href.includes("student#login")) {
       document.body.appendChild(loadingDiv);
       window.location.href =
         "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
     }
+
+      // cueck current url, if it contains "/app/student#studentmyday/progress" we logged in
+  if (
+    window.location.href.includes("https://polytechnic.myschoolapp.com/app/student#student")
+  ) {
+    loadingDiv.remove();
+    console.log("logged in");
+  }
   };
-  if (window.location.href.includes("app#login")) {
+  if (window.location.href.includes("app#login") || window.location.href.includes("student#login")) {
     document.body.appendChild(loadingDiv);
     window.location.href =
       "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
@@ -230,13 +241,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     }, 450);
   }
 
-  // cueck current url, if it contains "/app/student#studentmyday/progress" we logged in
-  if (
-    window.location.href.includes("https://polytechnic.myschoolapp.com/app/student")
-  ) {
-    loadingDiv.remove();
-    console.log("logged in");
-  }
+
 });
 
 
