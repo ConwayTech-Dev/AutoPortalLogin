@@ -27,103 +27,154 @@ async function check() {
 }
 let loadingDiv = document.createElement("div");
 loadingDiv.innerHTML = `
-<section class="wrapper">
-  <div class="card">
-    <p class="wbtxt">Welcome Back!</p>
-    <div class="loader">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </div>
+<section>
+<h2 class="splashText">Welcome back!</h2>
 </section>
+<div class="lol">
+<section>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+</section>
+</div>
 <style>
-body{
-  margin: 0;
+.lol {
+    transform: scale(0.5)
 }
-.wrapper{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  min-width: 100vw;
-  background-color: #142648;
-  opacity:50%;
+.lol *, *::before, *::after {
+    background-color: #ADC4CE;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-.card {
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-  border-radius: 5px;
-  box-shadow: 1px 4px 16px rgba(0,0,0,.4);
-  min-height: 300px;
-  min-width: 400px;
-  background-color: #fbfbfb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity:100%;
-}
-.loader{
-   border-radius: 50%;
-  position: relative;
-  margin: 50px;
-  display: inline-block;
-  height: 0px;
-  width: 0px;
+.splashText {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1rem !important;
+    text-align: center !important;
+    all: unset;
 }
 
-.loader span{
-    position: absolute;
-    display: block;
-    background: #ddd;
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
-    top: -20px;
-    perspective: 100000px;
-}
-.loader span:nth-child(1) {
-    left:63px;
-    animation: bounce2 1s cubic-bezier(0.04, 0.35, 0, 1) infinite;
-    animation-delay: 0s;
-    background: #f28b00;
-}
-.loader span:nth-child(2) {
-    left:17px;
-    animation: bounce2 1s cubic-bezier(0.04, 0.35, 0, 1) infinite;
-    animation-delay: .2s;
-    background: #142648;
-}
-.loader span:nth-child(3) {
-    left:-27px;
-    animation: bounce2 1s cubic-bezier(0.04, 0.35, 0, 1) infinite;
-    animation-delay: .4s;
-    background: #f28b00;
-}
-.loader span:nth-child(4) {
-    left: -77px;
-    animation: bounce2 1s cubic-bezier(0.04, 0.35, 0, 1) infinite;
-    animation-delay: .6s;
-    background: #142648;
-}
-.wbtxt{
-  font-size: 30px;
-  justify-content: center;
-  color: #f28b00;
+.lol body {
+align-items: center;
+display: flex;
+height: 100vh;
+justify-content: center;
 }
 
-@keyframes bounce2 {
-    0%, 56%, 100% {
-        transform: translateY(0px);
-        background: #142648;
-    }
-    25% {
-        transform: translateY(-30px);
-        background: #f28b00;
-    }
+.lol section {
+align-items: center;
+display: flex;
+flex-wrap: wrap;
+height: 400px;
+justify-content: space-evenly;
+width: 400px;
 }
+
+.lol div {
+height: 200px;
+width: 200px;
+position: relative;
+}
+
+.lol div:nth-of-type(1) {
+background-color: #EF9595;
+animation: okret1 2000ms linear;
+z-index: 4;
+}
+
+@keyframes okret1 {
+12.5% {
+transform: translate(200px, 0) ;
+}
+25% {
+transform: translate(200px, 200px) ;
+}
+37.5% {
+transform: translate(0, 200px) ;
+}
+50% {
+transform: translate(0, 0) ;
+}
+62.5% {
+transform: translate(0, 200px) ;
+}
+75% {
+transform: translate(200px, 200px) ;
+}
+87.5% {
+transform: translate(200px, 0) ;
+}
+100% {
+transform: translate(0, 0) ;
+}
+
+}
+
+.lol div:nth-of-type(2) {
+background-color: #EFB495;
+animation: okret2 1500ms linear 250ms;
+z-index: 3;
+}
+
+@keyframes okret2 {
+16.66% {
+transform: translate(0, 200px) ;
+}
+33.32% {
+transform: translate(-200px, 200px) ;
+}
+49.98% {
+transform: translate(-200px, 0) ;
+}
+66.64% {
+transform: translate(-200px, 200px) ;
+}
+83.30% {
+transform: translate(0, 200px) ;
+};
+100% {
+transform: translate(0, 0) ;
+}
+}
+
+.lol div:nth-of-type(4) {
+background-color: #EFD595;
+animation: okret3 1000ms linear 500ms;
+z-index: 2;
+}
+
+@keyframes okret3 {
+25% {
+transform: translate(-200px, 0) ;
+}
+50% {
+transform: translate(-200px, -200px) ;
+}
+75% {
+transform: translate(-200px, 0) ;
+};
+100% {
+transform: translate(0, 0) ;
+}
+}
+
+.lol div:nth-of-type(3) {
+background-color: #EBEF95;
+animation: okret4 500ms linear 750ms;
+z-index: 1;
+}
+
+@keyframes okret4 {
+50% {
+transform: translate(0, -200px) ;
+}
+100% {
+transform: translate(0, 0) ;
+}
+} 
 </style>
 `;
 loadingDiv.style.all = "unset";
