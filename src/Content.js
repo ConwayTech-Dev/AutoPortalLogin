@@ -285,6 +285,11 @@ console.log("logging in")
     console.log("window changed")
     console.log(window.location.href)
     if (window.location.href.includes("app#login") || window.location.href.includes("student#login")) {
+      if (document.querySelector("#site-header") == null) {
+        loadingDiv.remove();
+        console.log("logged in");
+        return
+      }
       document.body.appendChild(loadingDiv);
       window.location.href =
         "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
@@ -308,6 +313,7 @@ console.log("logging in")
   else if (window.location.href.includes("sso.myschoolapp.com")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
+  }
   else if (window.location.href.includes("app.blackbaud.com/signin")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
