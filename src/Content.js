@@ -139,11 +139,13 @@ loadingDiv.innerHTML = `
 .quote {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 1rem !important;
-    font-weight: 400 !important;
+    font-weight: 600 !important;
     letter-spacing: 0.1rem !important;
     text-align: center !important;
     all: unset;
     margin-bottom: 1rem;
+    color: #c1c1c1 !important;
+    text-transform: uppercase !important;
 }
 
 .lol body {
