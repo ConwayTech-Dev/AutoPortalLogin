@@ -231,7 +231,13 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     addQuoteToDiv();
     window.location.href =
       "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
-  } else if (window.location.href.includes("sso.myschoolapp.com")) {
+  } 
+  else if (document.getElementById("img-login-logo") != null) {
+    document.body.append(loadingDiv);
+    addQuoteToDiv();
+    window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
+  }
+  else if (window.location.href.includes("sso.myschoolapp.com")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
   } else if (window.location.href.includes("app.blackbaud.com/signin")) {
