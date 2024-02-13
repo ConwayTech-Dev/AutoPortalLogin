@@ -197,8 +197,12 @@ loadingDiv.style.justifyContent = "center";
 loadingDiv.style.alignItems = "center";
 loadingDiv.style.zIndex = "1000000"; // high enough to overlay the entire content
 
-// document.body.appendChild(loadingDiv);
 document.addEventListener("DOMContentLoaded", async function (event) {
+  waitForElm("#img-login-logo").then((elm) => {
+    document.body.append(loadingDiv);
+    addQuoteToDiv();
+    window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
+  })
 
   window.onhashchange = function () {
     console.log("window changed");
@@ -232,11 +236,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     window.location.href =
       "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
   } 
-  else if (document.getElementById("img-login-logo") != null) {
-    document.body.append(loadingDiv);
-    addQuoteToDiv();
-    window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
-  }
+
   else if (window.location.href.includes("sso.myschoolapp.com")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
@@ -253,11 +253,11 @@ document.addEventListener("DOMContentLoaded", async function (event) {
   ) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
-    console.log("waiting for element to load");
+   
     setTimeout(() => {
       // find all elements with [authuser] field and loop over them checking text content
       let authUsers = document.querySelectorAll("[data-authuser]");
-      console.log(authUsers);
+
       for (let i = 0; i < authUsers.length; i++) {
         if (authUsers[i].innerText.includes("students.polytechnic.org")) {
           authUsers[i].click();
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
     setInterval(() => {
       let authUsers = document.querySelectorAll("[data-authuser]");
-      console.log(authUsers);
+ 
       for (let i = 0; i < authUsers.length; i++) {
         if (authUsers[i].innerText.includes("students.polytechnic.org")) {
           authUsers[i].click();
