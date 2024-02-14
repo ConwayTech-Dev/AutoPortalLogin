@@ -198,11 +198,12 @@ loadingDiv.style.alignItems = "center";
 loadingDiv.style.zIndex = "1000000"; // high enough to overlay the entire content
 
 document.addEventListener("DOMContentLoaded", async function (event) {
-  waitForElm("#img-login-logo").then((elm) => {
-    document.body.append(loadingDiv);
-    addQuoteToDiv();
-    window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
-  })
+  // waitForElm("#img-login-logo").then((elm) => {
+  //   console.log("found logo of login screen");
+  //   document.body.append(loadingDiv);
+  //   addQuoteToDiv();
+  //   window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
+  // })
 
   window.onhashchange = function () {
     console.log("window changed");
@@ -260,6 +261,10 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
       for (let i = 0; i < authUsers.length; i++) {
         if (authUsers[i].innerText.includes("students.polytechnic.org")) {
+          authUsers[i].click();
+          break;
+        }
+        else if (authUsers[i].innerText.includes("@polytechnic.org")) {
           authUsers[i].click();
           break;
         }
