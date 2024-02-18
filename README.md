@@ -10,8 +10,8 @@ MyPolyAutoLogin is a convenient and simple extention that automatically logs you
 
 # Download
 
-![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
-![Brave](https://img.shields.io/badge/Brave-FB542B?style=for-the-badge&logo=Brave&logoColor=white)
+<a href="https://chromewebstore.google.com/detail/mypolyautologin/ogmnmfibodlmmehmoiemoakbapallbdi"><img src="https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white" alt="Get MyPolyAutoLogin for Chrome"></a>
+<a href="https://chromewebstore.google.com/detail/mypolyautologin/ogmnmfibodlmmehmoiemoakbapallbdi"><img src="https://img.shields.io/badge/Brave-FB542B?style=for-the-badge&logo=Brave&logoColor=white" alt="Get MyPolyAutoLogin for Brave"></a>
 
 # Contributing
 
