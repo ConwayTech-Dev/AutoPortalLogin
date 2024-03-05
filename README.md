@@ -4,9 +4,9 @@
 
 ***
 
-# MyPolyAutoLogin
+# AutoPortalLogin
 
-MyPolyAutoLogin is a convenient and simple extention that automatically logs you into the MyPoly portal after you've been timed out.
+AutoPortalLogin is a convenient and simple extension that automatically logs you into the Myschoolapp portal after you've been timed out.
 
 # Download
 
