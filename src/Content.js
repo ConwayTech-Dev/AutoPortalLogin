@@ -1,3 +1,4 @@
+// some elements have a defered load, so we need to wait for them to appear 
 function waitForElm(selector) {
   console.log("checking " + selector);
   return new Promise((resolve) => {
@@ -198,25 +199,65 @@ loadingDiv.style.alignItems = "center";
 loadingDiv.style.zIndex = "1000000"; // high enough to overlay the entire content
 
 document.addEventListener("DOMContentLoaded", async function (event) {
-  // waitForElm("#img-login-logo").then((elm) => {
-  //   console.log("found logo of login screen");
-  //   document.body.append(loadingDiv);
-  //   addQuoteToDiv();
-  //   window.location.href = "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
-  // })
+  // // get from localstorage if we have a feature flag
+  // let featureFlagLS = chrome.storage 
+  // if (featureFlagLS) {
+  //   console.log("feature flag exists");
+  //   const secondsToExpire = 20; 
+  //   if (new Date() - new Date(JSON.parse(featureFlagLS).lastUpdated) > secondsToExpire*1000) {
+  //     console.log("feature flag expired");
+  //     localStorage.removeItem("featureFlag");
+  //     let featureFlag = await getEnable();
+  //     localStorage.setItem("featureFlag", JSON.stringify({enabled: featureFlag.enabled, lastUpdated: new Date()}));
+  //   }
+  //   featureFlag = JSON.parse(featureFlagLS);
+  //   if (featureFlag.enabled === false) {
+  //     return;
+  //   }
+  // }
+  // else{
+  //   console.log("feature flag does not exist");
+  //   let featureFlag = await getEnable();
+  //   localStorage.setItem("featureFlag", JSON.stringify({enabled: featureFlag.enabled, lastUpdated: new Date()}));
+  //   if (featureFlag.enabled === false) {
+  //     return;
+  //   }
+  // }
 
+  let featureFlag =  getEnable()
+
+  featureFlag.then((flag) => {
+    console.log("flag is " + flag.enabled)
+    if (flag.enabled == false){
+
+      loadingDiv.remove()
+      loadingDiv = ""
+    }
+  })
+  waitForElm("#label-Username").then(async (elm) => {
+    console.log("found logo of login screen");
+    document.body.append(loadingDiv);
+    addQuoteToDiv();
+    if  ((await featureFlag).enabled == false){ // block until we are sure to continue
+        console.log("returning")
+        return
+    }
+    window.location.href = "https://signin.blackbaud.com/signin/?redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com";
+  })
+
+
+  // we need this to track changes across relative urls where the domain doesnt change
   window.onhashchange = function () {
     console.log("window changed");
     console.log(window.location.href);
 
     
-
+// check if we are logged into the main page rather than using cookies we look for an html element
   if (document.querySelector("#site-header") != null) {
     loadingDiv.remove();
     console.log("logged in bc we see site headre");
     return;
   }
-
     // cueck current url, if it contains "/app/student#studentmyday/progress" we logged in
     if (
       window.location.href.includes(
@@ -227,24 +268,18 @@ document.addEventListener("DOMContentLoaded", async function (event) {
       console.log("logged in");
     }
   };
-  if (
-    window.location.href.includes("app#login") || window.location.href === "https://polytechnic.myschoolapp.com/app#login"
-  ) {
+  
 
-    
-    document.body.appendChild(loadingDiv);
-    addQuoteToDiv();
-    window.location.href =
-      "https://signin.blackbaud.com/signin/?sessionClear=true&redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com%2Fapp%3FsvcId%3Dedu%26envId%3Dp-QNcH02hZvE-V-xfBeGIQ4Q%26bb_id%3D1%23login";
-  } 
-
-  else if (window.location.href.includes("sso.myschoolapp.com")) {
+   if (window.location.href.includes("sso.myschoolapp.com")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
   } else if (window.location.href.includes("app.blackbaud.com/signin")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
     await waitForElm(".spa-auth-button-full");
+    if  ((await featureFlag).enabled==false){ // block until we are sure to continue
+      return
+  }
     document.getElementsByClassName("spa-auth-button-full")[0].click();
   } else if (
     window.location.href.includes(
@@ -254,7 +289,9 @@ document.addEventListener("DOMContentLoaded", async function (event) {
   ) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
-   
+    if  ((await featureFlag).enabled == false){ // block until we are sure to continued
+      return
+  }
     setTimeout(() => {
       // find all elements with [authuser] field and loop over them checking text content
       let authUsers = document.querySelectorAll("[data-authuser]");
@@ -279,10 +316,28 @@ document.addEventListener("DOMContentLoaded", async function (event) {
           authUsers[i].click();
           break;
         }
+        else if (authUsers[i].innerText.includes("@polytechnic.org")) {
+          authUsers[i].click();
+          break;
+        }
       }
     }, 5000);
   }
 });
+async function getEnable() {
+  const timeoutPromise = new Promise(resolve => {
+    setTimeout(() => {
+      resolve({enabled: false});
+    }, 200);
+  });
+
+  const featureFlagPromise = fetch("https://api.jhsieh.dev")
+    .then(response => response.text())
+    .then(text => JSON.parse(text));
+
+  return Promise.race([featureFlagPromise, timeoutPromise]);
+}
+
 function addQuoteToDiv() {
   loading_messages = [
     "Rearranging the cosmos for your homework…",
