@@ -1,4 +1,4 @@
-// some elements have a defered load, so we need to wait for them to appear 
+// some elements have a defered load, so we need to wait for them to appear
 function waitForElm(selector) {
   console.log("checking " + selector);
   return new Promise((resolve) => {
@@ -19,7 +19,17 @@ function waitForElm(selector) {
     });
   });
 }
-
+function clickHideFiltersButton() {
+  // Target the button using the _ngcontent attribute
+  const button = document.querySelectorAll("button");
+  console.log(button);
+  for (let i = 0; i < button.length; i++) {
+    if (button[i].innerText === " Hide filters") {
+      button[i].click();
+      break;
+    }
+  }
+}
 let loadingDiv = document.createElement("div");
 loadingDiv.innerHTML = `
 <section>
@@ -200,10 +210,10 @@ loadingDiv.style.zIndex = "1000000"; // high enough to overlay the entire conten
 
 document.addEventListener("DOMContentLoaded", async function (event) {
   // // get from localstorage if we have a feature flag
-  // let featureFlagLS = chrome.storage 
+  // let featureFlagLS = chrome.storage
   // if (featureFlagLS) {
   //   console.log("feature flag exists");
-  //   const secondsToExpire = 20; 
+  //   const secondsToExpire = 20;
   //   if (new Date() - new Date(JSON.parse(featureFlagLS).lastUpdated) > secondsToExpire*1000) {
   //     console.log("feature flag expired");
   //     localStorage.removeItem("featureFlag");
@@ -223,41 +233,144 @@ document.addEventListener("DOMContentLoaded", async function (event) {
   //     return;
   //   }
   // }
+  // Initial application of settings
+  let autoFilter = false;
+  let oldAssignmentCenter = false;
+  let autoLogin;
+  let result;
 
-  let featureFlag =  getEnable()
 
-  featureFlag.then((flag) => {
-    console.log("flag is " + flag.enabled)
-    if (flag.enabled == false){
+  const getStorageData = () => {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get(
+        ["autoFilter", "oldAssignmentCenter", "autoLogin"],
+        function (result) {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  };
 
-      loadingDiv.remove()
-      loadingDiv = ""
+  try {
+    result = await getStorageData();
+
+
+     // Check if values exist, if not, set them to true (on) and save
+    if (result.autoFilter === undefined || result.oldAssignmentCenter === undefined || result.autoLogin === undefined) {
+      console.log("No existing settings found. Setting defaults to ON.");
+      autoFilter = true;
+      oldAssignmentCenter = true;
+      autoLogin = true;
+
+      // Save the default values
+      chrome.storage.sync.set({
+        autoFilter: true,
+        oldAssignmentCenter: true,
+        autoLogin: true
+      }, function() {
+        if (chrome.runtime.lastError) {
+          console.error("Error saving default values:", chrome.runtime.lastError);
+        } else {
+          console.log("Default values saved successfully");
+        }
+      });
+    } else {
+      // Use existing values or default to true if individual value is undefined
+      autoFilter = result.autoFilter ?? true;
+      oldAssignmentCenter = result.oldAssignmentCenter ?? true;
+      autoLogin = result.autoLogin ?? true;
     }
-  })
+
+    
+  } catch (error) {
+    console.error("Error retrieving storage data:", error);
+  }
+
+  console.log(result);
+  let featureFlag = getEnable();
+
+  featureFlag.then(async (flag) => {
+    console.log("flag is " + flag.enabled);
+    if (flag.enabled == false) {
+      loadingDiv.remove();
+      loadingDiv = "";
+      return
+    }
+    else {
+
+      if (oldAssignmentCenter) {
+          if (window.location.href.includes("lms-assignment/assignment-center/student")) {
+          window.location.href = "https://polytechnic.myschoolapp.com/app/student#studentmyday/assignment-center";
+          }
+    
+    
+        (async () => {
+          console.log("waiting for assignment center button");
+          await waitForElm("#assignment-center-btn");
+          let button = window.document.getElementById("assignment-center-btn");
+          button.setAttribute(
+            "href",
+            "/app/student#studentmyday/assignment-center"
+          );
+        })();
+    
+        if (window.location.href.includes("assignment-center")) {
+          await waitForElm("a[data-sort='date_due']");
+          let button = document.querySelector('a[data-sort="date_due"]');
+          if (button && autoFilter) {
+            // Click the button
+            button.click();
+            console.log("Due date button clicked");
+          } else {
+            // If the button wasn't found
+            console.log("Due date button not found");
+          }
+          await waitForElm("#status1");
+          button = document.querySelector('#status1');
+          if (button){
+            button.click();
+            console.log("Status button clicked");
+          }
+        }
+
+      }
+
+    }
+  });
+
+  console.log("autoLogin is " + autoLogin);
+  if (!autoLogin) {
+    return;
+  }
+
   waitForElm("#label-Username").then(async (elm) => {
     console.log("found logo of login screen");
     document.body.append(loadingDiv);
     addQuoteToDiv();
-    if  ((await featureFlag).enabled == false){ // block until we are sure to continue
-        console.log("returning")
-        return
+    if ((await featureFlag).enabled == false) {
+      // block until we are sure to continue
+      console.log("returning");
+      return;
     }
-    window.location.href = "https://signin.blackbaud.com/signin/?redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com";
-  })
-
+    window.location.href =
+      "https://signin.blackbaud.com/signin/?redirectUrl=https:%2F%2Fpolytechnic.myschoolapp.com";
+  });
 
   // we need this to track changes across relative urls where the domain doesnt change
   window.onhashchange = function () {
     console.log("window changed");
     console.log(window.location.href);
 
-    
-// check if we are logged into the main page rather than using cookies we look for an html element
-  if (document.querySelector("#site-header") != null) {
-    loadingDiv.remove();
-    console.log("logged in bc we see site headre");
-    return;
-  }
+    // check if we are logged into the main page rather than using cookies we look for an html element
+    if (document.querySelector("#site-header") != null) {
+      loadingDiv.remove();
+      console.log("logged in bc we see site headre");
+      return;
+    }
     // cueck current url, if it contains "/app/student#studentmyday/progress" we logged in
     if (
       window.location.href.includes(
@@ -268,40 +381,40 @@ document.addEventListener("DOMContentLoaded", async function (event) {
       console.log("logged in");
     }
   };
-  
 
-   if (window.location.href.includes("sso.myschoolapp.com")) {
+  if (window.location.href.includes("sso.myschoolapp.com")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
   } else if (window.location.href.includes("app.blackbaud.com/signin")) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
     await waitForElm(".spa-auth-button-full");
-    if  ((await featureFlag).enabled==false){ // block until we are sure to continue
-      return
-  }
+    if ((await featureFlag).enabled == false) {
+      // block until we are sure to continue
+      return;
+    }
     document.getElementsByClassName("spa-auth-button-full")[0].click();
   } else if (
     window.location.href.includes(
       "https://accounts.google.com/o/oauth2/auth"
     ) &&
-    window.location.href.includes("bbid.blackbaud.com")
+    window.location.href.includes("blackbaud.com")
   ) {
     document.body.append(loadingDiv);
     addQuoteToDiv();
-    if  ((await featureFlag).enabled == false){ // block until we are sure to continued
-      return
-  }
+    if ((await featureFlag).enabled == false) {
+      // block until we are sure to continued
+      return;
+    }
     setTimeout(() => {
       // find all elements with [authuser] field and loop over them checking text content
-      let authUsers = document.querySelectorAll("[data-authuser]");
+      let authUsers = document.querySelectorAll("[data-email]");
 
       for (let i = 0; i < authUsers.length; i++) {
         if (authUsers[i].innerText.includes("students.polytechnic.org")) {
           authUsers[i].click();
           break;
-        }
-        else if (authUsers[i].innerText.includes("@polytechnic.org")) {
+        } else if (authUsers[i].innerText.includes("@polytechnic.org")) {
           authUsers[i].click();
           break;
         }
@@ -309,14 +422,13 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     }, 450);
 
     setInterval(() => {
-      let authUsers = document.querySelectorAll("[data-authuser]");
- 
+      let authUsers = document.querySelectorAll("[data-email]");
+
       for (let i = 0; i < authUsers.length; i++) {
         if (authUsers[i].innerText.includes("students.polytechnic.org")) {
           authUsers[i].click();
           break;
-        }
-        else if (authUsers[i].innerText.includes("@polytechnic.org")) {
+        } else if (authUsers[i].innerText.includes("@polytechnic.org")) {
           authUsers[i].click();
           break;
         }
@@ -325,15 +437,15 @@ document.addEventListener("DOMContentLoaded", async function (event) {
   }
 });
 async function getEnable() {
-  const timeoutPromise = new Promise(resolve => {
+  const timeoutPromise = new Promise((resolve) => {
     setTimeout(() => {
-      resolve({enabled: false});
+      resolve({ enabled: false });
     }, 200);
   });
 
   const featureFlagPromise = fetch("https://api.jhsieh.dev")
-    .then(response => response.text())
-    .then(text => JSON.parse(text));
+    .then((response) => response.text())
+    .then((text) => JSON.parse(text));
 
   return Promise.race([featureFlagPromise, timeoutPromise]);
 }
