@@ -6,7 +6,12 @@
 
 # AutoPortalLogin
 
-AutoPortalLogin is a convenient and simple extension that automatically logs you into the Myschoolapp portal after you've been timed out.
+AutoPortalLogin is a convenient Chrome extension that provides quality-of-life features for Myschoolapp (designed for MyPoly).
+
+# Features
+
+* Bring a faster login experience by skipping the clicks required to log into Myschoolapp after being timed out
+* Restore the old Assignment Center
 
 # Download
 
